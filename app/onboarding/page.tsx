@@ -32,20 +32,47 @@ export default function OnboardingPage() {
   const progressIntervalRef = useRef<NodeJS.Timeout>()
   const channelRef = useRef<any>()
   const [secondsLeft, setSecondsLeft] = useState(60)
+  const [did, setDid] = useState<string>("")
 
 
-  const nextStep = () => {
+  const nextStep = useCallback(async () => {
     if (step < 4) {
-      if (step === 3 && !yubikeyVerified) {
-        setStatusMessage("Please verify your YubiKey before continuing")
+      // block continuing if neither YubiKey nor biometric succeeded
+      if (
+        step === 3 &&
+        !yubikeyVerified &&
+        verificationStatus !== 'success'
+      ) {
+        setStatusMessage("Please verify before continuing")
         setVerificationStatus('error')
         return
       }
+
+      // *After* step 3, but *before* rendering step 4, create the DID
+      if (step === 3) {
+        try {
+          const res = await fetch(
+            `/api/did/create?method=${didMethod}&network=${network}`
+          )
+          const json = await res.json()
+          if (json.did) {
+            setDid(json.did)
+          } else {
+            throw new Error(JSON.stringify(json))
+          }
+        } catch (e) {
+          console.error("DID creation failed", e)
+          setStatusMessage("Failed to mint DID")
+          setVerificationStatus('error')
+          return
+        }
+      }
+
       setStep(step + 1)
     } else {
       window.location.href = "/dashboard"
     }
-  }
+  }, [step, didMethod, network, yubikeyVerified, verificationStatus])
 
   const prevStep = () => {
     if (step > 1) setStep(step - 1)
@@ -132,7 +159,7 @@ export default function OnboardingPage() {
               clearInterval(progressIntervalRef.current!)
               setVerificationStatus('success')
               setStatusMessage('Biometric verification successful!')
-              setTimeout(() => nextStep(), 2000)
+              setTimeout(() => nextStep(), 1000)
             }
           }
         )
@@ -522,7 +549,7 @@ export default function OnboardingPage() {
                     <div className="bg-card rounded-lg p-4">
                       <p className="text-sm font-medium text-muted-foreground mb-1">Your DID</p>
                       <p className="font-mono text-sm break-all">
-                        did:{didMethod}:{network}:2F9Y3C7fjk2K9EJ5QrxEMTJYs9CjzXDJzn
+                        {did}
                       </p>
                     </div>
 
