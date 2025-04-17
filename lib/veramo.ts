@@ -20,12 +20,12 @@ import { Resolver } from 'did-resolver'
 
 // ── FOR DEV ONLY: hard‑coded secrets ──
 const KMS_SECRET = 'f7a4b0d9e3c1fbb8a96e2d84ec3f4c66b8e9d2a1f52c738e6a1c0d5b3f27e911'
-const SEPOLIA_RPC = 'https://sepolia.infura.io/v3/c26b6ce821ff40da8809ead2788c511e'
+const SEPOLIA_RPC = 'https://sepolia.infura.io/v3/url'
 
 // 1) Initialize TypeORM DataSource with synchronize: true
 export const dataSource = new DataSource({
   type: 'postgres',
-  url: 'postgresql://postgres:coc28125@db.zypsytuagcvfguzlkhcq.supabase.co:5432/postgres',
+  url: 'postgresql://postgres:url@localhost:5432/veramo',
   synchronize: true,          // ← auto-create tables from entities :contentReference[oaicite:0]{index=0}
   logging: ['error', 'schema'],
   entities: Entities,         // Veramo’s Key, PrivateKey, DID, etc.

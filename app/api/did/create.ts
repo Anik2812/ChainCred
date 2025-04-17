@@ -3,16 +3,16 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ethers, Providers } from 'ethers';
 
 // Use the deployed contract address and ABI from your DIDRegistry.sol compilation
-const DID_REGISTRY_ADDRESS = process.env.DID_REGISTRY_ADDRESS || '0xaFAaD41d3642E35bE87e4577e899F69B97386d6b';
+const DID_REGISTRY_ADDRESS = process.env.DID_REGISTRY_ADDRESS || 'contract_address_here';
 const DID_REGISTRY_ABI = [
   "function registerDID(string calldata didDocument) external",
   "event DIDRegistered(address indexed owner, string didDocument, uint256 timestamp)"
 ];
 
 // Setup provider for Sepolia (Infura used as an example)
-const provider = new Providers.InfuraProvider("sepolia", process.env.INFURA_API_KEY || "https://sepolia.infura.io/v3/24237cbb31974196acb8b8ec4969a760");
+const provider = new Providers.InfuraProvider("sepolia", process.env.INFURA_API_KEY || "https://sepolia.infura.io/v3/url");
 // Use a wallet (you should keep the private key secure, via env variables)
-const walletPrivateKey = process.env.PRIVATE_KEY || "b8d62977efcf17f00bd79033630128398fe0ced70e0b221c8ae2f64166d089e0";
+const walletPrivateKey = process.env.PRIVATE_KEY || "pruvate_key_here";
 const wallet = new ethers.Wallet(walletPrivateKey, provider);
 
 // Create a contract instance

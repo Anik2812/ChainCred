@@ -2,14 +2,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ethers, Contract, InfuraProvider } from 'ethers';
 
-const DID_REGISTRY_ADDRESS = process.env.DID_REGISTRY_ADDRESS || '0xaFAaD41d3642E35bE87e4577e899F69B97386d6b';
+const DID_REGISTRY_ADDRESS = process.env.DID_REGISTRY_ADDRESS || 'contract_address_here';
 const DID_REGISTRY_ABI = [
   "function updateCredential(string calldata credentialCID) external",
   "event CredentialUpdated(address indexed owner, string credentialCID, uint256 timestamp)"
 ];
 
-const provider = new InfuraProvider("sepolia", process.env.INFURA_API_KEY || "https://sepolia.infura.io/v3/24237cbb31974196acb8b8ec4969a760");
-const walletPrivateKey = process.env.PRIVATE_KEY || "b8d62977efcf17f00bd79033630128398fe0ced70e0b221c8ae2f64166d089e0";
+const provider = new InfuraProvider("sepolia", process.env.INFURA_API_KEY || "https://sepolia.infura.io/v3/url");
+const walletPrivateKey = process.env.PRIVATE_KEY || "private_key_here";
 const wallet = new ethers.Wallet(walletPrivateKey, provider);
 
 const didRegistryContract = new Contract(DID_REGISTRY_ADDRESS, DID_REGISTRY_ABI, wallet);
